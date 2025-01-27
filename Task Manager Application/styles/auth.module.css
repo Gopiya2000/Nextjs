@@ -1,0 +1,54 @@
+.authForm {
+    max-width: 450px;
+    margin: 100px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #fff;
+    text-align: center;
+}
+
+.authForm .form .input {
+    display: block;
+    width: 80%;
+    margin: 10px auto;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.authForm .form .submitButton {
+    width: 50%;
+    padding: 10px;
+    margin: 15px 0;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.authForm .form .submitButton:hover {
+    background-color: #0056b3;
+}
+
+.authForm .toggleContainer {
+    margin-top: 10px;
+    color: #3c3838;
+}
+
+.authForm .toggleContainer .toggleButton {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+}
+
+.authForm .toggleContainer .toggleButton:hover {
+    text-decoration: underline;
+}
+
+.error {
+    color: red;
+    font-size: 13px;
+}
