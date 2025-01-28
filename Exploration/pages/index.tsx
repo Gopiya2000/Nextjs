@@ -27,6 +27,10 @@ export default function HomeRedirect() {
             <div>
                 <button onClick={() => router.push('/user')}>User List</button>
             </div>
+            {/* Code splitting */}
+            <div>
+                <button onClick={() => router.push('/environment/document')}>Play video</button>
+            </div>
         </div>
     );
 }
