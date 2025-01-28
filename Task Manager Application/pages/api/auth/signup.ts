@@ -26,7 +26,7 @@ const SignupFormSchema = z.object({
         .trim(),
 });
 
-export default async function handler(
+export default async function signupHandler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {

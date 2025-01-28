@@ -5,7 +5,7 @@ import nookies from 'nookies';
 import dbConnect from '../../../lib/db/connect';
 import User from '../../../lib/models/User';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function loginHandler(req: NextApiRequest, res: NextApiResponse) {
     // Check if the request method is POST
     if (req.method === 'POST') {
         // Destructure email and password from the request body

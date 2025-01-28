@@ -1,0 +1,22 @@
+.title {
+    text-align: center;
+}
+
+.addTaskButton {
+    position: absolute;
+    top: 35px;
+    right: 35px;
+    background-color: #326c5c;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.addTaskButton:hover {
+    background-color: #3e846e;
+}
+
