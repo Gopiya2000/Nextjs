@@ -31,6 +31,10 @@ export default function HomeRedirect() {
             <div>
                 <button onClick={() => router.push('/environment/document')}>Play video</button>
             </div>
+            {/* Image */}
+            <div>
+            <Link href= 'logo'>View Logo</Link>
+            </div>
         </div>
     );
 }
