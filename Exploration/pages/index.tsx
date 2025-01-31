@@ -33,7 +33,11 @@ export default function HomeRedirect() {
             </div>
             {/* Image */}
             <div>
-            <Link href= 'logo'>View Logo</Link>
+                <Link href= 'logo'>View Logo</Link>
+            </div>
+            {/* Typescript */}
+            <div>
+                <Link href= 'ts'>Typescript</Link>
             </div>
         </div>
     );
