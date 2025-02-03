@@ -1,9 +1,13 @@
-import { useState } from 'react';
-import styles from '../styles/auth.module.css';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUser, signupUser } from '../store/authSlice';
+import { AppDispatch, RootState } from '../store/store';
+import styles from '../styles/auth.module.css';
 
 export default function AuthForm() {
     const router = useRouter();
+    const dispatch = useDispatch<AppDispatch>();
 
     const [isSignup, setIsSignup] = useState(false);
     const [formData, setFormData] = useState({
@@ -17,42 +21,50 @@ export default function AuthForm() {
         name: '',
     });
 
+    const { loading } = useSelector((state: RootState) => state.auth);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        const url = isSignup ? '/api/auth/signup' : '/api/auth/login';
+        const action = isSignup ? signupUser : loginUser;
 
         try {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
-            });
+            const resultAction = await dispatch(action(formData));
 
-            const data = await response.json();
+            // Check if the action was rejected
+            if (resultAction.type.endsWith('rejected')) {
+                const errorResponse = resultAction.payload;
 
-            if (!response.ok) {
-                if (data.errors) {
-                    // Set specific field errors
-                    setErrors(data.errors);
+                if (typeof errorResponse === 'string') {
+                    // If the server returns a simple error message
+                    alert(errorResponse);
+                } else if (errorResponse && typeof errorResponse === 'object') {
+                    if (errorResponse) {
+                        setErrors((prevErrors) => ({
+                            ...prevErrors,
+                            ...Object.keys(errorResponse).reduce((acc, field) => {
+                                acc[field] = errorResponse[field].join(' ');
+                                return acc;
+                            }, {} as Record<string, string>),
+                        }));
+                    }
+
+                    alert('Validation failed. Please check your inputs.');
                 } else {
-                    // Handle any other type of error (like a generic message)
-                    alert(data.message || 'An error occurred');
+                    alert('Something went wrong. Please try again.');
                 }
-                return;
-            }
-
-            if (isSignup) {
-                alert('User registered successfully!');
-                setIsSignup(false);
             } else {
-                alert('Login successful!');
-                router.push('/dashboard');
+                if (isSignup) {
+                    alert('User registered successfully!');
+                    setIsSignup(false);
+                } else {
+                    alert('Login successful!');
+                    router.push('/dashboard');
+                }
             }
         } catch (error) {
-            alert('Something went wrong, please try again.');
+            alert("An unexpected error occurred. Please try again.");
         }
-    };
+    };    
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -103,7 +115,9 @@ export default function AuthForm() {
                 />
                 {errors.password && <p className={styles.error}>{errors.password}</p>}
 
-                <button  className={styles.submitButton} type="submit">{isSignup ? 'Sign Up' : 'Login'}</button>
+                <button className={styles.submitButton} type="submit" disabled={loading}>
+                    {loading ? 'Loading...' : isSignup ? 'Sign Up' : 'Login'}
+                </button>
             </form>
             <p className={styles.toggleContainer}>
                 {isSignup ? 'Already have an account?' : "Don't have an account?"}

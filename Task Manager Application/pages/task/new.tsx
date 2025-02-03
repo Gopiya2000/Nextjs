@@ -2,40 +2,43 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../store/store';
+import { addTask } from '../../store/taskSlice';
 import styles from '../../styles/newTask.module.css';
 
 const NewTaskPage = () => {
     const router = useRouter();
-    
-    const [taskName, setTaskName] = useState<string>('');
-    const [description, setDescription] = useState<string>('');
+    const dispatch = useDispatch<AppDispatch>();
+    const { loading, error } = useSelector((state: RootState) => state.tasks);
+    const userId = useSelector((state: RootState) => state.auth.user?.userId);
+
+    const [taskName, setTaskName] = useState('');
+    const [description, setDescription] = useState('');
     const [dueDate, setDueDate] = useState<Date | null>(null);
-    const [priority, setPriority] = useState<string>('Low');
+    const [priority, setPriority] = useState('Low');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!taskName || !description || !dueDate || !priority) {
+            alert('All fields are required.');
+            return;
+        }
 
-        try {
-            const response = await fetch('/api/task', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
+        try {            
+            await dispatch(
+                addTask({
+                    userId,
                     taskName,
                     description,
-                    dueDate,
+                    dueDate: new Date(dueDate).toISOString(), // Convert to string
                     priority,
-                }),
-            });
-
-            if (!response.ok) {
-                alert('Failed to add task. Please try again.');
-                return;
-            }
-            
+                })
+            );
             alert('Task added successfully!');
             router.push('/dashboard');
-        } catch (error) {
-            alert('Something went wrong, please try again.');
+        } catch (err) {
+            alert(err || 'Something went wrong. Please try again.');
         }
     };
 
@@ -71,10 +74,10 @@ const NewTaskPage = () => {
                     <DatePicker
                         selected={dueDate}
                         onChange={(date: Date) => setDueDate(date)}
-                        dateFormat="yyyy-MM-dd" // Format for displaying the date
+                        dateFormat="yyyy-MM-dd"
                         className={styles.input}
                         placeholderText="Select due date"
-                        minDate={new Date()} // Prevent selection of past dates
+                        minDate={new Date()}
                         required
                     />
                 </div>
@@ -93,7 +96,10 @@ const NewTaskPage = () => {
                     </select>
                 </div>
 
-                <button type="submit" className={styles.submitButton}>Add Task</button>
+                <button type="submit" className={styles.submitButton} disabled={loading}>
+                    {loading ? 'Adding...' : 'Add Task'}
+                </button>
+                {error && <p className={styles.error}>{error}</p>}
             </form>
         </div>
     );

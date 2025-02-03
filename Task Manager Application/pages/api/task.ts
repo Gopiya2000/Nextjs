@@ -1,33 +1,34 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import dbConnect from '../../lib/db/connect';
 import Task from '../../lib/models/Task';
+import dbConnect from '../../lib/db/connect';
 
-export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
-) {
-    // Establish database connection before handling requests
-    await dbConnect();
-
+export default async function taskHandler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
+        await dbConnect();
+
+        const { userId, taskName, description, dueDate, priority } = req.body;
+
+        if (!userId || !taskName || !description || !dueDate || !priority) {
+            return res.status(400).json({ message: 'All fields are required' });
+        }
+
         try {
-            const { taskName, description, dueDate, priority } = req.body;
+            const newTask = new Task({
+                userId,
+                taskName,
+                description,
+                dueDate,
+                priority,
+            });
 
-            if (!taskName || !description || !dueDate || !priority) {
-                return res.status(400).json({ message: 'All fields are required' });
-            }
-
-            const newTask = new Task({ taskName, description, dueDate, priority });
+            // Save the new task to the database
             await newTask.save();
 
-            // Respond with a 201 status and the newly created task
-            return res.status(201).json({ message: 'Task created successfully', task: newTask });
+            return res.status(201).json({ task: newTask });
         } catch (error) {
-            // Handle any errors that occur during task creation
-            return res.status(500).json({ message: 'Internal server error' });
+            return res.status(500).json({ message: 'Error creating task' });
         }
     } else {
-        // Handle unsupported request methods
         return res.status(405).json({ message: 'Method Not Allowed' });
     }
 }

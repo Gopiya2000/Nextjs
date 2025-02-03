@@ -1,11 +1,7 @@
-.title {
-    text-align: center;
-}
-
 .addTaskButton {
     position: absolute;
-    top: 35px;
-    right: 35px;
+    top: 100px;
+    right: 41px;
     background-color: #326c5c;
     color: #fff;
     border: none;
@@ -20,3 +16,72 @@
     background-color: #3e846e;
 }
 
+.dashboard {
+    position: relative;
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0 20px;
+}
+
+.titleContainer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo {
+    object-fit: contain;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+
+.tabContainer {
+    display: flex;
+    gap: 20px;
+}
+
+.tabButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    color: #333;
+    transition: background-color 0.3s ease;
+}
+
+.tabButton:hover {
+    background-color: #f0f0f0;
+    border-radius: 8px;
+}
+
+.activeTab {
+    border-bottom: 2px solid #326c5c;
+    font-weight: bold;
+    color: #326c5c;
+}
+
+.logoutButton {
+    padding: 10px 20px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.logoutButton:hover {
+    background-color: #e53935;
+}

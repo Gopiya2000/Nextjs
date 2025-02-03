@@ -5,7 +5,10 @@ import nookies from 'nookies';
 import dbConnect from '../../../lib/db/connect';
 import User from '../../../lib/models/User';
 
-export default async function loginHandler(req: NextApiRequest, res: NextApiResponse) {
+export default async function loginHandler(
+    req: NextApiRequest, 
+    res: NextApiResponse
+) {
     // Check if the request method is POST
     if (req.method === 'POST') {
         // Destructure email and password from the request body
@@ -47,7 +50,10 @@ export default async function loginHandler(req: NextApiRequest, res: NextApiResp
             });
 
             // Respond with a success message
-            return res.status(200).json({ message: 'Login successful' });
+            return res.status(200).json({
+                message: 'Login successful',
+                userId: user._id.toString(),
+            });
         } catch (error) {
             return res.status(500).json({ message: 'Something went wrong, please try again.' });
         }
